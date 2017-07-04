@@ -12,6 +12,10 @@ let paddle;
 let bricks;
 let left;
 let right;
+let score = 0;
+let scoreText;
+let gameOver;
+let finalScore;
 function create()
 {
     game.stage.backgroundColor = '#3598db';
@@ -52,11 +56,14 @@ function create()
 
     // Give the ball some initial speed
     ball.body.velocity.x = 200;
-    ball.body.velocity.y = 200;
+    ball.body.velocity.y = 400;
 
     // Make sure the ball will bounce when hitting something
     ball.body.bounce.setTo(1); 
     ball.body.collideWorldBounds = true;
+
+    scoreText = game.add.text(16,16, 'Score: 0', { fontSize: '20px', fill:'#000'} );
+
 
 
 }
@@ -65,8 +72,8 @@ function update()
 {
 
    // Move the paddle left/right when an arrow key is pressed
-   if (left.isDown) paddle.body.velocity.x = -300;
-   else if (right.isDown) paddle.body.velocity.x = 300; 
+   if (left.isDown) paddle.body.velocity.x = -700;
+   else if (right.isDown) paddle.body.velocity.x = 700; 
 
    // Stop the paddle when no key is pressed
    else paddle.body.velocity.x = 0; 
@@ -77,12 +84,40 @@ function update()
    // Call the 'hit' function when the ball hits a brick
    game.physics.arcade.collide(ball, bricks, hit, null, this);
 
+   if (ball.position.y > 510)
+   {
+     
+      gameOver = game.add.text(270,300, 'GAME OVER',{ fontSize: '40px', fill:'#000'} );
+      finalScore = game.add.text(325,350, 'Final Score : '+score,{ fontSize: '20px', fill:'#000'} );
+      
 
+      ball.body.velocity.y = 0;    
+      ball.body.velocity.x = 0;    
+      setTimeout( () => {
+         resetGame();
+     }, 5000);
+    
+      
+      
+   }
+
+
+}
+
+function resetGame()
+{
+    socre = 0;
+    game.state.restart();
+
+    
 }
 
 function hit(ball, brick)
 {
+
 	brick.kill();
+  score += 1;
+  scoreText.text = 'Score:'+score;
 }
 
 
